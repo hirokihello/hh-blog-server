@@ -16,4 +16,4 @@ const typeDefs = `
   }
 `;
 
-export default typeDefs
+export default typeDefs;

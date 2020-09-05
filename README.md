@@ -7,6 +7,14 @@ vanilla nodejs + ts + graphql + redis
 - アプリケーションフレームワークは原則禁止。
 - apolloやgraphql-serverは、高性能すぎてフレームワークと呼んでも差し支えないので禁止。
 
+
+#### lint
+
+prettier + eslint
+
+参考記事
+https://blog.ojisan.io/eslint-prettier
+
 #### usage
 
 graphql query sample
@@ -18,12 +26,7 @@ graphql query sample
 }
 
 # redisのデータ操作
-{
-  "mutation": {
-    set(key: \"myname\", value: \"myname is ben\")
-  }
-}
-
+{ "query": "mutation { set(key: \"myname\", value: \"myname is ben\") }"}
 
 {
   "query": "query { get(key: \"myname\") }"

@@ -1,30 +1,41 @@
-const { users } = require("./testData")
-import { client } from "./app";
+import users from "./testData";
+import { promisify } from "util";
 
-// Provide resolver functions for your schema fields
+import redis from "redis";
+const client = redis.createClient();
+const getAsync = promisify(client.get).bind(client);
+
+client.on("error", function (error: string) {
+  console.error(error);
+});
+
 const resolvers = {
   Query: {
-    hello: () => 'Hello world!',
+    hello: (): string => "Hello world!",
     users: () => users,
-    get: async ( { key }: { key: string}) => {
+    get: async (parent: undefined, { key }: { key: string }) => {
       try {
-        return client.getAsync(key);
+        return getAsync(key);
       } catch (e) {
-        return null
+        return null;
       }
-    }
+    },
   },
   Mutation: {
-    set: async ( {key, value}: { key: string, value: string}) => {
+    set: async (
+      parent: undefined,
+      { key, value }: { key: string; value: string }
+    ) => {
       try {
+        console.log({ key });
         await client.set(key, value);
-        return true
-      } catch(e) {
+        return true;
+      } catch (e) {
         console.log(e);
-        return false
+        return false;
       }
-    }
-  }
+    },
+  },
 };
 
 export default resolvers;

@@ -1,17 +1,25 @@
 {
   "scripts": {
     "start": "nodemon ./src/app.ts",
-    "start:graphql": "node graphql-server/index.js"
+    "lint": "eslint ./src/* --fix"
   },
   "dependencies": {
     "bluebird": "^3.7.2",
     "graphql": "^15.3.0",
     "graphql-tools": "^6.2.0",
-    "nodemon": "^2.0.4",
-    "redis": "^3.0.2",
-    "ts-node": "^9.0.0"
+    "redis": "^3.0.2"
   },
   "devDependencies": {
+    "@types/bluebird": "^3.5.32",
+    "@types/redis": "^2.8.27",
+    "@typescript-eslint/eslint-plugin": "^4.0.1",
+    "@typescript-eslint/parser": "^4.0.1",
+    "eslint": "^7.8.1",
+    "eslint-config-prettier": "^6.11.0",
+    "eslint-plugin-prettier": "^3.1.4",
+    "nodemon": "^2.0.4",
+    "prettier": "^2.1.1",
+    "ts-node": "^9.0.0",
     "typescript": "^4.0.2"
   },
   "name": "hh-blog-server-nextjs",
