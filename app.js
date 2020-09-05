@@ -91,7 +91,4 @@ server.on('request', async function(req, res) {
     })
 });
 
-// サーバを待ち受け状態にする
-// 第1引数: ポート番号
-// 第2引数: IPアドレス
 server.listen(3000);
