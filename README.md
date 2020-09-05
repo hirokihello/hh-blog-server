@@ -2,11 +2,12 @@
 
 hirokihello blog server
 
-学習のためサーバーサイドに関してアプリケーションフレームワークは原則禁止。
-apolloやgraphql-serverは、高性能すぎてフレームワークと呼んでも差し支えないので禁止。
+vanilla nodejs + ts + graphql + redis
+
+- アプリケーションフレームワークは原則禁止。
+- apolloやgraphql-serverは、高性能すぎてフレームワークと呼んでも差し支えないので禁止。
 
 #### usage
-
 
 graphql query sample
 
