@@ -2,6 +2,9 @@
 
 hirokihello blog server
 
+学習のためサーバーサイドに関してアプリケーションフレームワークは原則禁止。
+apolloやgraphql-serverは、高性能すぎてフレームワークと呼んでも差し支えないので禁止。
+
 #### usage
 
 
@@ -22,7 +25,7 @@ graphql query sample
 
 
 {
-  "query": "{ get(key: \"myname\") }"
+  "query": "query { get(key: \"myname\") }"
 }
 
 ```

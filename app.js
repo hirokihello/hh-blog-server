@@ -1,23 +1,18 @@
-const express = require('express');
 const { users } = require("./testData")
-const bodyParser = require('body-parser');
-const { graphqlExpress, graphiqlExpress } = require('apollo-server-express');
+
+const { graphql } = require('graphql')
 const { makeExecutableSchema } = require('graphql-tools');
 const redis = require("redis");
 const bluebird = require("bluebird");
+const http = require('http');
 
 const client = redis.createClient();
-
 bluebird.promisifyAll(redis.RedisClient.prototype);
 bluebird.promisifyAll(redis.Multi.prototype)
-
 
 client.on("error", function(error) {
   console.error(error);
 });
-
-client.set("key", "value", redis.print);
-client.get("key", redis.print);
 
 // Construct a schema, using GraphQL schema language
 const typeDefs = `
@@ -42,7 +37,7 @@ const resolvers = {
   Query: {
     hello: () => 'Hello world!',
     users: () => users,
-    get: async (parent, { key }, { client }) => {
+    get: async (parent, { key }) => {
       try {
         return client.getAsync(key);
       } catch (e) {
@@ -51,7 +46,7 @@ const resolvers = {
     }
   },
   Mutation: {
-    set: async ( parent, {key, value}, {client}) => {
+    set: async ( parent, {key, value}) => {
       try {
         await client.set(key, value);
         return true
@@ -68,12 +63,35 @@ const schema = makeExecutableSchema({
   resolvers,
 });
 
-const app = express();
+const server = http.createServer();
 
-app.use('/graphql', bodyParser.json(), graphqlExpress({ schema, context: { client } }));
-// GraphiQL, a visual editor for queries
-app.use('/graphiql', graphiqlExpress({ endpointURL: '/graphql' }));
+server.on('request', async function(req, res) {
+    const headers = req.headers
+    if(headers['content-type'] !== 'application/json' || headers['content-length' === 0]) return res.end();
 
-app.listen({ port: 4000 }, () =>
-  console.log(`🚀 Server ready at http://localhost:4000`)
-);
+    let arr = [];
+    req.on('data', chunk => {
+      arr.push(chunk);
+    })
+    req.on('end', async () => {
+      // 空のリクエストの排除
+      try {
+        JSON.parse(arr)
+        if (!JSON.parse(arr).query) return res.end();
+        const response = await graphql(schema, JSON.parse(arr).query)
+        console.log(response)
+
+        res.writeHead(200, {'Content-Type' : 'application/json'});
+        res.write(`${JSON.stringify(response)}`);
+    } catch (e) {
+        return  res.end();
+        ;
+    }
+      res.end();
+    })
+});
+
+// サーバを待ち受け状態にする
+// 第1引数: ポート番号
+// 第2引数: IPアドレス
+server.listen(3000);

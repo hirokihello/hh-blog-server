@@ -1,3 +1,3 @@
 .PHONY: run
 run:
-	node app.js
+	npm start
